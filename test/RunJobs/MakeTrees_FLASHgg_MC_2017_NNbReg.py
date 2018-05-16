@@ -26,7 +26,8 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 2000 )
 from flashgg.MetaData.JobConfig import customize
 import FWCore.ParameterSet.VarParsing as VarParsing
 # set default options if needed
-customize.setDefault("maxEvents",-1)
+#customize.setDefault("maxEvents",-1)
+customize.setDefault("maxEvents",10)
 customize.setDefault("targetLumi",2.58e+3)
 
 customize.register('doSelection',
@@ -143,7 +144,7 @@ for icoll,coll in enumerate(recoJetCollections):
     producer =   cms.EDProducer('flashggbRegressionProducer',
 				JetTag=coll,
 				rhoFixedGridCollection = cms.InputTag('fixedGridRhoFastjetAll'),
-				bRegressionWeightfile= cms.untracked.string("/afs/cern.ch/work/m/micheli/flashgg_20180323/CMSSW_8_0_28/src/flashgg/MetaData/data/DNN_models/model-18"), 
+				bRegressionWeightfile= cms.untracked.string("/afs/cern.ch/work/n/nchernya/ETH/CMSSW_8_0_28/src/flashgg/MetaData/data/DNN_models/model-18"), 
 				y_mean = cms.untracked.double(1.0454729795455933),#check /afs/cern.ch/work/m/micheli/CMSSW_8_0_28/src/flashgg/MetaData/data/DNN_models/config.json
 				y_std = cms.untracked.double( 0.31628304719924927)
 				)
