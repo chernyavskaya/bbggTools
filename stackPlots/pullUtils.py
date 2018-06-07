@@ -1,8 +1,7 @@
+#!/bin/python
 from ROOT import *
-from copy import deepcopy
 from math import *
 from array import array
-from flashgg.bbggTools.MyCMSStyle import *
 
 def getRatio(hist1, hist2):
 	graph = TGraphAsymmErrors(hist1)
@@ -169,7 +168,6 @@ def SaveNoPull(data, bkg, fileName):
 #	c0.SaveAs('/afs/cern.ch/user/r/rateixei/www/HHBBGG/TestBench/noPull_'+str(fileName) + ".png")
 #	c0.Delete()
 
-
 def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lumi, signals, SUM, ControlRegion, hideData, year):
 	gStyle.SetHatchesLineWidth(1)
 	data.SetStats(0)
@@ -179,21 +177,16 @@ def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lu
 
 	bkg.Draw('hist')
 	bkg.SetTitle("")
-	bkg.SetMinimum(0.01)
+	bkg.SetMinimum(0.001)
 	print bkg.GetNhists()
-#	bkg.GetYaxis().SetTitle("Events")
-#	if "GeV" in varName:
-	nbins = bkg.GetXaxis().GetNbins()
-	binslow = bkg.GetXaxis().GetBinLowEdge(1)
-	binsup = bkg.GetXaxis().GetBinUpEdge(nbins)
-	perbin = (float(binsup) - float(binslow))/float(nbins)
-	thisLabel = "Events/("+str(perbin)+")"
-	bkg.GetYaxis().SetTitle(thisLabel)
-
+	bkg.GetYaxis().SetTitle("Events")
 	if "GeV" in varName:
-		thisLabel = "Events/("+str(perbin)+"GeV)"
-
-	print "Hello World"
+		nbins = bkg.GetXaxis().GetNbins()
+		binslow = bkg.GetXaxis().GetBinLowEdge(1)
+		binsup = bkg.GetXaxis().GetBinUpEdge(nbins)
+		perbin = (float(binsup) - float(binslow))/float(nbins)
+		thisLabel = "Events/("+str(perbin)+" GeV)"
+		bkg.GetYaxis().SetTitle(thisLabel)
 
 	bkg.GetYaxis().SetTitleOffset(1.75)
 
@@ -209,8 +202,7 @@ def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lu
 	bkg.SetTitle("")
 	bkg.SetMinimum(0.001)	
 	SUM.Draw("E2 same")
-	if(hideData == False):
-		data.Draw('E same')
+	data.Draw('E same')
 	tlatex = TLatex()
 	baseSize = 25
 	tlatex.SetNDC()
@@ -221,9 +213,9 @@ def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lu
 	tlatex.SetTextSize(25)
 	tlatex.DrawLatex(0.11, 0.91, "CMS")
 	tlatex.SetTextFont(53)
-#	tlatex.DrawLatex(0.18, 0.91, "Preliminary")#
-#	tlatex.SetTextFont(43)
-#	tlatex.SetTextSize(23)
+	tlatex.DrawLatex(0.18, 0.91, "Preliminary")
+	tlatex.SetTextFont(43)
+	tlatex.SetTextSize(23)
 #	tlatex.DrawLatex(0.65, 0.91,"L = 2.70 fb^{-1} (13 TeV)")
 	Lumi = "" + str(lumi) + " pb^{-1} (13 TeV)"#, "+ year + ")"
 	if lumi > 1000:
@@ -245,13 +237,6 @@ def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lu
 		h[0].Draw("same hist")
 	cs.SaveAs(dirName+"/NP_" + fileName + ".pdf")
 	cs.SaveAs(dirName+"/NP_" + fileName + ".png")
-
-	if hideData:
-		cs.SetLogy()
-		bkg.SetMinimum(0.01)
-	        cs.SaveAs(dirName+"/LOG_" + fileName + ".pdf")
-	        cs.SaveAs(dirName+"/LOG_" + fileName + ".png")
-		return
 
 
 	ratio = 0.2
@@ -334,7 +319,7 @@ def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lu
 	tlatex.SetTextSize(25)
 	tlatex.DrawLatex(0.11, 0.91, "CMS")
 	tlatex.SetTextFont(53)
-#	tlatex.DrawLatex(0.18, 0.91, "Preliminary")
+	tlatex.DrawLatex(0.18, 0.91, "Preliminary")
 	tlatex.SetTextFont(43)
 	tlatex.SetTextSize(23)
 #	tlatex.DrawLatex(0.65, 0.91,"L = 2.70 fb^{-1} (13 TeV)")
@@ -400,6 +385,83 @@ def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lu
 	print "Expected number of events (MC):", SUM.Integral()
 	print "Observed number of events (DATA):", data.Integral()
 
+
+
+def SaveShapes(legend, fileName, varName, dirName, bkg, signals, ControlRegion, hideData, year):
+	gStyle.SetHatchesLineWidth(1)
+	Font = 43
+	labelSize = 20
+	titleSize = 24
+
+	cs = TCanvas("cs", "cs", 800, 600)
+	isFirst = False
+	maximum = 0
+	for h in bkg:
+		if h[0].GetMaximum() > maximum:
+			maximum = h[0].GetMaximum()
+	for h in signals:
+		if h[0].GetMaximum() > maximum:
+			maximum = h[0].GetMaximum()
+
+	for h in bkg:
+		if isFirst == False:
+			isFirst = True
+			h[0].Draw("hist")
+		else:
+			h[0].Draw('samehist')
+		h[0].SetTitle(varName)
+		h[0].SetMinimum(0.001)
+		h[0].GetYaxis().SetTitle("Events")
+		if "GeV" in varName:
+			nbins = h[0].GetXaxis().GetNbins()
+			binslow = h[0].GetXaxis().GetBinLowEdge(1)
+			binsup = h[0].GetXaxis().GetBinUpEdge(nbins)
+			perbin = (float(binsup) - float(binslow))/float(nbins)
+			thisLabel = "Events/("+str(perbin)+" GeV)"
+			h[0].GetYaxis().SetTitle(thisLabel)
+		h[0].GetYaxis().SetTitleOffset(1.25)
+	#### Configure thstack
+		h[0].GetXaxis().SetNdivisions(515)
+		h[0].GetXaxis().SetTitle(varName)
+		h[0].GetYaxis().SetTitleOffset(1.25)
+		h[0].SetMaximum(maximum*1.15)
+		h[0].SetTitle("")
+		h[0].SetMinimum(0.001)	
+	tlatex = TLatex()
+	baseSize = 25
+	tlatex.SetNDC()
+	tlatex.SetTextAngle(0)
+	tlatex.SetTextColor(kBlack)
+	tlatex.SetTextFont(63)
+	tlatex.SetTextAlign(11)
+	tlatex.SetTextSize(25)
+	tlatex.DrawLatex(0.11, 0.91, "CMS")
+	tlatex.SetTextFont(53)
+	tlatex.DrawLatex(0.18, 0.91, "Preliminary")
+	tlatex.SetTextFont(43)
+	tlatex.SetTextSize(23)
+#	tlatex.DrawLatex(0.65, 0.91,"L = 2.70 fb^{-1} (13 TeV)")
+#	tlatex.DrawLatex(0.14, 0.82, Lumi)
+	tlatex.SetTextAlign(31)
+	tlatex.SetTextAlign(11)
+
+	if ControlRegion != "":
+		tlatex.SetTextFont(63)
+		tlatex.DrawLatex(0.14, 0.78, ControlRegion)
+
+	for leg in legend:
+		leg.Draw('same')
+
+	for h in signals:
+		h[0].Draw("same hist")
+	cs.SaveAs(dirName+"/NP_" + fileName + ".pdf")
+	cs.SaveAs(dirName+"/NP_" + fileName + ".png")
+
+	cs.SetLogy()
+	cs.SaveAs(dirName+"/NP_" + fileName + "_log.pdf")
+	cs.SaveAs(dirName+"/NP_" + fileName + "_log.png")
+
+
 def SavePull(pullH, pullE, LowEdge, UpEdge, dirName):
 	ca = TCanvas("ca", "ca", 1000, 800)
 	ca.cd()
@@ -415,7 +477,7 @@ def SavePull(pullH, pullE, LowEdge, UpEdge, dirName):
 #	ca.SaveAs(dirName + "/pull.png")
 #	ca.Delete()
 
-def MakeLegend(HistList, DataHist, lumi, Signals, SUM):
+def MakeLegend(HistList, DataHist, lumi, Signals, SUM, hideData, hideStat):
 	newList = []
 	newLegs = []
 	for h in HistList:
@@ -425,18 +487,19 @@ def MakeLegend(HistList, DataHist, lumi, Signals, SUM):
 			newList.append(h)
 			newLegs.append(h[1])
 
-#	nMaxPerBox = (len(newList)+len(Signals)+2)/3
-	nMaxPerBox = (len(newList)+1)/3
-#	if (3*nMaxPerBox < len(newList)+len(Signals)+2):
-	if (3*nMaxPerBox < len(newList)+1):
+	nMaxPerBox = (len(newList)+len(Signals)+2)/3
+	if (3*nMaxPerBox < len(newList)+len(Signals)+2):
 		nMaxPerBox += 1
-	lenPerHist = 0.04
+	lenPerHist = 0.27/float(nMaxPerBox)
 
 	legends = []
 #	leg1 = TLegend(0.65, 0.65, 0.71, 0.65+lenPerHist*float(nMaxPerBox))
-	leg1 = TLegend(0.13, 0.85-lenPerHist*float(len(Signals)), 0.49, 0.87)
-	leg2 = TLegend(0.50, 0.85-lenPerHist*3, 0.68, 0.87)
-	leg3 = TLegend(0.70, 0.85-lenPerHist, 0.85, 0.87)
+	leg1 = TLegend(0.68, 0.85-lenPerHist*float(nMaxPerBox), 0.74, 0.89)
+#	if (3*nMaxPerBox > len(newList)+len(Signals)+2):
+#		nMaxPerBox -= 1
+	leg2 = TLegend(0.43, 0.85-lenPerHist*float(nMaxPerBox)/1.75, 0.49, 0.89)
+
+	leg3 = TLegend(0.13, 0.85-lenPerHist*float(nMaxPerBox), 0.19, 0.89)
 	
 	legends.append(leg1)
 	legends.append(leg2)
@@ -450,34 +513,42 @@ def MakeLegend(HistList, DataHist, lumi, Signals, SUM):
 #	leg1.AddEntry(SUM, " Stat. Uncertainty", "lf")
 	
 	allLegs = []
-#	allLegs.append([DataHist, "Data (" + str(llumi) + " fb^{-1})"])
-	allLegs.append([DataHist, "Data"])
-#	allLegs.append([SUM,  "Stat. Uncert."])
-	allLegs += newList
 
-	nMaxPerBox = (len(newList)+len(Signals)+1)/3
-	if (3*nMaxPerBox < len(newList)+len(Signals)+1):
+	allLegs.append([DataHist, "Data (" + str(lumi) + " fb^{-1})"])
+	allLegs.append([SUM,  "Stat. Uncertainty"])
+	allLegs += newList + Signals
+
+	nMaxPerBox = (len(newList)+len(Signals)+2)/3
+	if (3*nMaxPerBox < len(newList)+len(Signals)+2):
 		nMaxPerBox += 1
-
-	for j,l in enumerate(Signals):
-		Type = 'l'
-		if 'Grav.' in l[1] or 'Rad.' in l[1]:
-			legends[len(legends)-3].AddEntry(l[0], ' '+l[1], Type)
-		else:
-			legends[len(legends)-3].AddEntry(l[0], ' '+l[1], Type)
-
+	if hideData:
+		nMaxPerBox+=1
+	if hideStat:
+		nMaxPerBox+=1
+	
 
 	for i,l in enumerate(allLegs):
 		Type = 'f'
 		if 'Data' in l[1]:
+			if hideData:
+				continue
 			Type = 'lep'
-			legends[len(legends)-1].AddEntry(l[0], ' '+l[1], Type)
-		else:
-			legends[len(legends)-2].AddEntry(l[0], ' '+l[1], Type)
-
+		if 'Stat' in l[1]:
+			Type = 'f'
+			if hideStat:
+				print "no stat!"
+				continue
+			
+		iLeg = i//nMaxPerBox
+		if hideData and hideStat and 'on' in l[1]:#non resonant, radion, graviton
+			iLeg=1
+		print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+		print "i:",i,"iLeg:",iLeg, l,nMaxPerBox
+		print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+		legends[iLeg].AddEntry(l[0], ' '+l[1], Type)
 
         textFont = 43
-        textSize = 25
+        textSize = 16
 	for leg in legends:
 		leg.SetFillStyle(0)
 		leg.SetLineWidth(0)
@@ -486,3 +557,5 @@ def MakeLegend(HistList, DataHist, lumi, Signals, SUM):
 		leg.SetTextSize(textSize)
 
 	return legends
+
+

@@ -151,13 +151,15 @@ private:
     LorentzVector leadingMuon, subleadingMuon, leadingElectron, subleadingElectron; 
     LorentzVector p4MET;
     float dEta_VBF, Mjj_VBF;
+    float dijetSigmaMOverM;
     LorentzVector leadingJet_KF, subleadingJet_KF, dijetCandidate_KF;
     LorentzVector leadingJet_Reg, subleadingJet_Reg, dijetCandidate_Reg;
     LorentzVector leadingJet_RegKF, subleadingJet_RegKF, dijetCandidate_RegKF;
-    LorentzVector diHiggsCandidate, diHiggsCandidate_KF, diHiggsCandidate_Reg,diHiggsCandidate_RegKF;
+    LorentzVector diHiggsCandidate, diHiggsCandidateCorr, diHiggsCandidate_KF, diHiggsCandidate_Reg,diHiggsCandidate_RegKF;
     vector<int> leadingPhotonID, leadingPhotonISO, subleadingPhotonID, subleadingPhotonISO;
     vector<double> genWeights;
     float leadingJet_bDis, subleadingJet_bDis, jet1PtRes, jet1EtaRes, jet1PhiRes, jet2PtRes, jet2EtaRes, jet2PhiRes;
+    float leadingJetCorr_bDis, subleadingJetCorr_bDis;
     float leadingJet_CSVv2, leadingJet_cMVA, subleadingJet_CSVv2, subleadingJet_cMVA;
     float leadingPhotonIDMVA, subleadingPhotonIDMVA, DiJetDiPho_DR, PhoJetMinDr;
     float leadingPhotonSigOverE, subleadingPhotonSigOverE, sigmaMOverM, sigmaMOverMDecorr;
@@ -779,13 +781,18 @@ void
     leadingPhoton.SetPxPyPzE(0,0,0,0);// = diphoCand->leadingPhoton()->p4();
     subleadingPhoton.SetPxPyPzE(0,0,0,0);// = diphoCand->subLeadingPhoton()->p4();
     leadingJet.SetPxPyPzE(0,0,0,0);// = LeadingJet->p4();
+    leadingJetCorr.SetPxPyPzE(0,0,0,0);// = LeadingJet->p4();
     leadingJet_bDis = 0;// = LeadingJet->bDiscriminator(bTagType);
+    leadingJetCorr_bDis = 0;// = LeadingJet->bDiscriminator(bTagType);
     leadingJet_flavour = 0;// = LeadingJet->partonFlavour();
     subleadingJet.SetPxPyPzE(0,0,0,0);// = SubLeadingJet->p4();
+    subleadingJetCorr.SetPxPyPzE(0,0,0,0);// = SubLeadingJet->p4();
     subleadingJet_bDis = 0;//SubLeadingJet->bDiscriminator(bTagType);
+    subleadingJetCorr_bDis = 0;//SubLeadingJet->bDiscriminator(bTagType);
     subleadingJet_flavour = 0;//SubLeadingJet->partonFlavour();
     dijetCandidate.SetPxPyPzE(0,0,0,0);// = leadingJet + subleadingJet;
     diHiggsCandidate.SetPxPyPzE(0,0,0,0);// = diphotonCandidate + dijetCandidate;
+    diHiggsCandidateCorr.SetPxPyPzE(0,0,0,0);// = diphotonCandidate + dijetCandidate;
     leadingJet_CSVv2 = 0;
     leadingJet_cMVA = 0;
     subleadingJet_CSVv2 = 0;
@@ -1167,32 +1174,43 @@ void
     leadingJet_flavour = LeadingJet.partonFlavour();
     leadingJet_hadFlavour = LeadingJet.hadronFlavour();
     subleadingJet = SubLeadingJet.p4();
-    if(doNNJetRegression){
-      TLorentzVector lead, sublead;
-      lead.SetPtEtaPhiE(leadingJet.pt()*LeadingJet.userFloat("bRegNNCorr"),leadingJet.eta(),leadingJet.phi(),leadingJet.e()*LeadingJet.userFloat("bRegNNCorr"));
-      leadingJetCorr.SetPxPyPzE(lead.Px(),lead.Py(),lead.Pz(),lead.E());
-
-      sublead.SetPtEtaPhiE(subleadingJet.pt()*SubLeadingJet.userFloat("bRegNNCorr"),subleadingJet.eta(),subleadingJet.phi(),subleadingJet.e()*SubLeadingJet.userFloat("bRegNNCorr"));
-      subleadingJetCorr.SetPxPyPzE(sublead.Px(),sublead.Py(),sublead.Pz(),sublead.E());
-
-
-    }
-
     subleadingJet_bDis = SubLeadingJet.bDiscriminator(bTagType);
     subleadingJet_flavour = SubLeadingJet.partonFlavour();
     subleadingJet_hadFlavour = SubLeadingJet.hadronFlavour();
-
-    leadingJet_CSVv2 = LeadingJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
+    
+	 leadingJet_CSVv2 = LeadingJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
     leadingJet_cMVA = LeadingJet.bDiscriminator("pfCombinedMVAV2BJetTags");
     subleadingJet_CSVv2 = SubLeadingJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
     subleadingJet_cMVA = SubLeadingJet.bDiscriminator("pfCombinedMVAV2BJetTags");;
 
-    //NN b-regression
-    leadingJet_bRegNNCorr =  LeadingJet.userFloat("bRegNNCorr");
-    leadingJet_bRegNNResolution =  LeadingJet.userFloat("bRegNNResolution");
+    if(doNNJetRegression){
+      TLorentzVector lead, sublead;
+      lead.SetPtEtaPhiE(leadingJet.pt()*LeadingJet.userFloat("bRegNNCorr"),leadingJet.eta(),leadingJet.phi(),leadingJet.e()*LeadingJet.userFloat("bRegNNCorr"));
 
-    subleadingJet_bRegNNCorr =  SubLeadingJet.userFloat("bRegNNCorr");
-    subleadingJet_bRegNNResolution =  SubLeadingJet.userFloat("bRegNNResolution");
+      sublead.SetPtEtaPhiE(subleadingJet.pt()*SubLeadingJet.userFloat("bRegNNCorr"),subleadingJet.eta(),subleadingJet.phi(),subleadingJet.e()*SubLeadingJet.userFloat("bRegNNCorr"));
+      if (sublead.Pt() > lead.Pt()) {
+		 	subleadingJetCorr.SetPxPyPzE(lead.Px(),lead.Py(),lead.Pz(),lead.E());
+    	   leadingJetCorr.SetPxPyPzE(sublead.Px(),sublead.Py(),sublead.Pz(),sublead.E());
+         leadingJet_bRegNNCorr =  SubLeadingJet.userFloat("bRegNNCorr");
+         leadingJet_bRegNNResolution =  SubLeadingJet.userFloat("bRegNNResolution");
+    		subleadingJet_bRegNNCorr =  LeadingJet.userFloat("bRegNNCorr");
+   		subleadingJet_bRegNNResolution =  LeadingJet.userFloat("bRegNNResolution");
+         leadingJetCorr_bDis = SubLeadingJet.bDiscriminator(bTagType); 
+         subleadingJetCorr_bDis = LeadingJet.bDiscriminator(bTagType); 
+		} else {
+			subleadingJetCorr.SetPxPyPzE(sublead.Px(),sublead.Py(),sublead.Pz(),sublead.E());
+    	   leadingJetCorr.SetPxPyPzE(lead.Px(),lead.Py(),lead.Pz(),lead.E());
+         leadingJet_bRegNNCorr =  LeadingJet.userFloat("bRegNNCorr");
+         leadingJet_bRegNNResolution =  LeadingJet.userFloat("bRegNNResolution");
+    		subleadingJet_bRegNNCorr =  SubLeadingJet.userFloat("bRegNNCorr");
+   		subleadingJet_bRegNNResolution =  SubLeadingJet.userFloat("bRegNNResolution");
+         leadingJetCorr_bDis = LeadingJet.bDiscriminator(bTagType);
+         subleadingJetCorr_bDis = SubLeadingJet.bDiscriminator(bTagType); 
+		}
+	
+    }
+	
+
 
 
      //..... gen jets info 
@@ -1239,7 +1257,13 @@ void
 
 
     dijetCandidate = leadingJet + subleadingJet;
-    if (doNNJetRegression)dijetCandidateCorr = leadingJetCorr + subleadingJetCorr;
+    if (doNNJetRegression)  {
+               dijetCandidateCorr = leadingJetCorr + subleadingJetCorr;
+               diHiggsCandidateCorr = diphotonCandidate + dijetCandidateCorr;
+		         dijetSigmaMOverM = 1./pow(dijetCandidateCorr.M(),2)*sqrt( 
+					pow(leadingJet_bRegNNResolution,2)*pow( pow(leadingJetCorr.M(),2) + leadingJetCorr.Dot(subleadingJetCorr) ,2)  + 
+            pow(subleadingJet_bRegNNResolution,2)*pow( pow(subleadingJetCorr.M(),2) + subleadingJetCorr.Dot(leadingJetCorr),2) );
+	 }
     diHiggsCandidate = diphotonCandidate + dijetCandidate;
 
     MX = diHiggsCandidate.M() - diphotonCandidate.M() - dijetCandidate.M() + 250;
@@ -1266,8 +1290,7 @@ void
     DiJetDiPho_DR = tools_.DeltaR(diphotonCandidate, dijetCandidate);
 
     PhoJetMinDr = min( min( tools_.DeltaR( leadingPhoton, leadingJet ), tools_.DeltaR( leadingPhoton, subleadingJet ) ),
-                       min( tools_.DeltaR( subleadingPhoton, leadingJet ), tools_.DeltaR( subleadingPhoton, subleadingJet ) ) );
-
+                    min( tools_.DeltaR( subleadingPhoton, leadingJet ), tools_.DeltaR( subleadingPhoton, subleadingJet ) ) );
 
 
 
@@ -1307,6 +1330,29 @@ void
      leadingPhotonSigOverE = diphoCand.leadingPhoton()->sigEOverE();
      subleadingPhotonSigOverE = diphoCand.subLeadingPhoton()->sigEOverE();
      sigmaMOverM = 0.5 * TMath::Sqrt(leadingPhotonSigOverE *leadingPhotonSigOverE + subleadingPhotonSigOverE * subleadingPhotonSigOverE );
+     sigmaMOverMDecorr = -99.;
+
+
+
+     //sigmaMOverM
+     if(doDecorr){
+       //                std::cout<<"sigmaMdecorrFile is set, so we evaluate the transf"<<std::endl;
+       double mass_sigma[2]={0.,0.};
+       double dummy[1]={0.};
+       mass_sigma[0]=diphotonCandidate.M();
+       mass_sigma[1]=sigmaMOverM;
+                 
+       //splitting EBEB and !EBEB, using cuts as in preselection
+       if(abs(diphoCand.leadingPhoton()->superCluster()->eta())<1.4442 && abs(diphoCand.subLeadingPhoton()->superCluster()->eta())<1.4442){
+ 	sigmaMOverMDecorr = (*transfEBEB_)(mass_sigma,dummy);
+         cout<<"sigma M /M EBEB : "<< sigmaMOverM<<" , " <<sigmaMOverMDecorr<< " , "<<diphotonCandidate.M()<<endl;
+       }
+       else{
+ 	sigmaMOverMDecorr = (*transfNotEBEB_)(mass_sigma,dummy);
+         cout<<"sigma M /M EB EE : "<< sigmaMOverM<<" , " <<sigmaMOverMDecorr<< " , "<<diphotonCandidate.M()<<endl;
+       }
+     }
+ 
 
 
     if(DEBUG) std::cout << "customLeadingPhotonMVA: " << diphoCand.leadingPhoton()->phoIdMvaDWrtVtx( diphoCand.vtx() ) << std::endl;
@@ -1357,25 +1403,6 @@ void
          HHTagger2017_transform = HHTagger2017_cumulative->Eval(HHTagger2017) ;
  
      }
-
-
-     //sigmaMOverM
-     if(doDecorr){
-       //                std::cout<<"sigmaMdecorrFile is set, so we evaluate the transf"<<std::endl;
-       double mass_sigma[2]={0.,0.};
-       double dummy[1]={0.};
-       mass_sigma[0]=diphotonCandidate.M();
-       mass_sigma[1]=sigmaMOverM;
-                 
-       //splitting EBEB and !EBEB, using cuts as in preselection
-       if(abs(diphoCand.leadingPhoton()->superCluster()->eta())<1.4442 && abs(diphoCand.subLeadingPhoton()->superCluster()->eta())<1.4442){
- 	sigmaMOverMDecorr = (*transfEBEB_)(mass_sigma,dummy);
-       }
-       else{
- 	sigmaMOverMDecorr = (*transfNotEBEB_)(mass_sigma,dummy);
-       }
-     }
- 
 
 
     if(DEBUG) std::cout << "[bbggTree::analyze] After filling candidates" << std::endl;
@@ -1573,6 +1600,7 @@ bbggTree::beginJob()
     tree->Branch("leadingJet_Reg", &leadingJet_Reg);
     tree->Branch("leadingJet_RegKF", &leadingJet_RegKF);
     tree->Branch("leadingJet_bDis", &leadingJet_bDis, "leadingJet_bDis/F");
+    tree->Branch("leadingJetCorr_bDis", &leadingJetCorr_bDis, "leadingJetCorr_bDis/F");
     tree->Branch("leadingJet_CSVv2", &leadingJet_CSVv2, "leadingJet_CSVv2/F");
     tree->Branch("leadingJet_cMVA", &leadingJet_cMVA, "leadingJet_cMVA/F");
     tree->Branch("leadingJet_flavour", &leadingJet_flavour, "leadingJet_flavour/I");
@@ -1583,6 +1611,7 @@ bbggTree::beginJob()
     tree->Branch("subleadingJet_Reg", &subleadingJet_Reg);
     tree->Branch("subleadingJet_RegKF", &subleadingJet_RegKF);
     tree->Branch("subleadingJet_bDis", &subleadingJet_bDis, "subleadingJet_bDis/F");
+    tree->Branch("subleadingJetCorr_bDis", &subleadingJetCorr_bDis, "subleadingJetCorr_bDis/F");
     tree->Branch("subleadingJet_CSVv2", &subleadingJet_CSVv2, "subleadingJet_CSVv2/F");
     tree->Branch("subleadingJet_cMVA", &subleadingJet_cMVA, "subleadingJet_cMVA/F");
     tree->Branch("subleadingJet_flavour", &subleadingJet_flavour, "subleadingJet_flavour/I");
@@ -1609,6 +1638,7 @@ bbggTree::beginJob()
      tree->Branch("subleadingJet_genHadronFlavourb",&subleadingJet_genHadronFlavourb, "subleadingJet_genHadronFlavourb/F");
      tree->Branch("subleadingJet_genNbHadronsb",&subleadingJet_genNbHadronsb, "subleadingJet_genNbHadronsb/F");
      tree->Branch("subleadingJet_genNcHadronsb",&subleadingJet_genNcHadronsb, "subleadingJet_genNcHadronsb/F");
+     tree->Branch("dijetSigmaMOverM", &dijetSigmaMOverM, "dijetSigmaMOverM/F");
 
     tree->Branch("HHTagger2017", &HHTagger2017, "HHTagger2017/F"); 
     tree->Branch("HHTagger2017_transform", &HHTagger2017_transform, "HHTagger2017_transform/F"); 
@@ -1619,6 +1649,7 @@ bbggTree::beginJob()
     tree->Branch("dijetCandidate_Reg", &dijetCandidate_Reg);
     tree->Branch("dijetCandidate_RegKF", &dijetCandidate_RegKF);
     tree->Branch("diHiggsCandidate", &diHiggsCandidate);
+    tree->Branch("diHiggsCandidateCorr", &diHiggsCandidateCorr);
     tree->Branch("diHiggsCandidate_KF", &diHiggsCandidate_KF);
     tree->Branch("diHiggsCandidate_Reg", &diHiggsCandidate_Reg);
     tree->Branch("diHiggsCandidate_RegKF", &diHiggsCandidate_RegKF);

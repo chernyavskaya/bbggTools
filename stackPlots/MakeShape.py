@@ -2,10 +2,11 @@ from pullClass import *
 from ROOT import *
 import json, os
 import shutil
-from configsStack import *
+from configsShape import *
 import resource
 
 #SetMemoryPolicy( kMemoryStrict )
+gROOT.SetBatch(1)
 
 gStyle.SetOptStat(0)
 dummyTFile = TFile("dummy.root", "RECREATE")
@@ -13,7 +14,7 @@ dummyTFile = TFile("dummy.root", "RECREATE")
 if not os.path.exists(dirName):
         print dirName, "doesn't exist, creating it..."
         os.makedirs(dirName)
-        shutil.copy2(dirPrefix + "index.php", dirName+"/index.php")
+       # shutil.copy2(dirPrefix + "index.php", dirName+"/index.php")
         if os.path.exists(dirName):
                 print dirName, "now exists!"
 
@@ -73,9 +74,9 @@ for plot in plots:
     for background in datasets["background"]:
         if not addbbH and 'bbH' in background: continue
 	if not addHiggs and 'VH' in background: continue
+	if not addggHttH and 'ttH' in background: continue
+	if not addggHttH and 'ggH' in background: continue
 	if not addHiggs and 'VBF' in background: continue
-	if not addHiggs and 'ggH' in background: continue
-	if not addHiggs and 'ttH' in background: continue
         if not dyjets and "DYJ" in background: continue
         if "QCD" in background: continue
         print background
@@ -96,8 +97,8 @@ for plot in plots:
             locName = thisName+str(i)
             locHist = thisHist.Clone(locName)
             thisWeightedCut = weightedCut
-#            if "QCD" in thisTreeLoc:
-#		    thisWeightedCut = TCut(weightedcut.replace("isSignal == 1", "isSignal == 0"))
+            if "QCD" in thisTreeLoc:
+		    thisWeightedCut = TCut(weightedcut.replace("isSignal == 1", "isSignal == 0"))
             Trees[thisTreeLoc].Draw(plot[1]+">>"+locName, thisWeightedCut)
 
 	    if not doShape and useJsonWeighting:

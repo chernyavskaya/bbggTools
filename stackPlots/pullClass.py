@@ -4,7 +4,7 @@ from copy import deepcopy
 from math import *
 from array import array
 from pullUtils import *
-from drawUtils import *
+
 
 class myStack:
 	myHistograms = []
@@ -20,6 +20,7 @@ class myStack:
 	def __init__(self, name, title, varName, dirName, lumi):
 		self.myHistograms = []
 		self.mySignals = []
+		self.myBackgrounds = []
 		self.tStack = ''
 		self.mySumHists = ''
 		self.myData = ''
@@ -35,8 +36,14 @@ class myStack:
 		self.isJetCR = 0
 		self.legends = []
 		self.hideData_ = 0
+		self.hideStat_ = 0
+		self.doShape_ = 0
+		self.useJsonWeighting_ = 1
+		self.addggHttH_ = 0
 	def hideData(self):
 		self.hideData_ = 1
+	def hideStat(self):
+		self.hideStat_ = 1
 	def setYear(self, Year):
 		self.year = Year
 	def makeJetCR(self):
@@ -50,6 +57,9 @@ class myStack:
 	def addSignal(self, hist, legend, norm):
 		self.mySignals.append([deepcopy(hist), str(legend), norm])
 		SetOwnership( self.mySignals[len(self.mySignals)-1][0], False)
+	def addBackground(self, hist, legend, norm):
+		self.myBackgrounds.append([deepcopy(hist), str(legend), norm])
+		SetOwnership( self.myBackgrounds[len(self.myBackgrounds)-1][0], False)
 	def addData(self, hist, legend):
 		self.myData = deepcopy(hist)
 		SetOwnership( self.myData, False)
@@ -59,8 +69,15 @@ class myStack:
 			return 1
 		else:
 			return 0
+	def doShape(self):
+		self.doShape_ = 1
+	def useJsonWeighting(self):
+		self.useJsonWeighting_ = 1
+	def addggHttH(self):
+		self.addggHttH_ = 1
+
+
 	def drawStack(self, fileName):
-		print "HERE"
 		if len(self.myHistograms) < 1:
 			print 'Your list of histograms is empty!'
 			return 0
@@ -86,15 +103,17 @@ class myStack:
 		self.SUM.SetMarkerColorAlpha(0,0)
 #		self.SUM.SetLineColorAlpha(kGray+2,0.5)
 		self.SUM.SetFillStyle(1001)
-		legend = MakeLegend(self.myHistograms, self.myData, self.lumi, self.mySignals, self.SUM)
+		legend = MakeLegend(self.myHistograms, self.myData, self.lumi, self.mySignals, self.SUM, self.hideData_, self.hideStat_)
 		ControlRegion = ""
 		if self.isPhoCR == 1:
 			ControlRegion = "Fake Photon CR"
 		if self.isJetCR == 1:
 			ControlRegion = "Light Jets CR"
 		print self.tStack.GetNhists()
-		DrawNoPull(self.myData, self.tStack, legend, fileName, self.varName, self.dirName, self.lumi, self.mySignals, self.SUM, ControlRegion, self.hideData_, self.year)
-#		SaveWithoutPull(self.myData, self.tStack, legend, fileName, self.varName, self.dirName, self.lumi, self.mySignals, self.SUM, ControlRegion, self.hideData_, self.year)
-#		SaveWithPull(self.myData, self.tStack, legend, pullH, pullE, fileName, self.varName, self.dirName, self.lumi, self.mySignals, self.SUM, ControlRegion, self.hideData_, self.year)
+
+		if not self.doShape_:
+			SaveWithPull(self.myData, self.tStack, legend, pullH, pullE, fileName, self.varName, self.dirName, self.lumi, self.mySignals, self.SUM, ControlRegion, self.hideData_, self.year)
+		else:
+			SaveShapes(legend, fileName, self.varName, self.dirName, self.myBackgrounds, self.mySignals,  ControlRegion, self.hideData_, self.year)
 #		gROOT.EndOfProcessCleanups()
 
