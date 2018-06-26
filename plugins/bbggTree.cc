@@ -1345,11 +1345,11 @@ void
        //splitting EBEB and !EBEB, using cuts as in preselection
        if(abs(diphoCand.leadingPhoton()->superCluster()->eta())<1.4442 && abs(diphoCand.subLeadingPhoton()->superCluster()->eta())<1.4442){
  	sigmaMOverMDecorr = (*transfEBEB_)(mass_sigma,dummy);
-         cout<<"sigma M /M EBEB : "<< sigmaMOverM<<" , " <<sigmaMOverMDecorr<< " , "<<diphotonCandidate.M()<<endl;
+       //  cout<<"sigma M /M EBEB : "<< sigmaMOverM<<" , " <<sigmaMOverMDecorr<< " , "<<diphotonCandidate.M()<<endl;
        }
        else{
  	sigmaMOverMDecorr = (*transfNotEBEB_)(mass_sigma,dummy);
-         cout<<"sigma M /M EB EE : "<< sigmaMOverM<<" , " <<sigmaMOverMDecorr<< " , "<<diphotonCandidate.M()<<endl;
+      //   cout<<"sigma M /M EB EE : "<< sigmaMOverM<<" , " <<sigmaMOverMDecorr<< " , "<<diphotonCandidate.M()<<endl;
        }
      }
  

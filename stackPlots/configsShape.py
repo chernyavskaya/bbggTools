@@ -127,6 +127,10 @@ plots.append(["subleadingJet_bRegNNResolution", "subleadingJet_bRegNNResolution"
 plots.append(["dijetSigmaMOverM","dijetSigmaMOverM","dijet #sigma_{M}/M ",nbin,0.,0.4])
 plots.append(["diHiggsCandidateCorrMass", "diHiggsCandidateCorr.M()", "M(jj#gamma#gamma) [GeV] regressed", nbin, 100, 1000])
 plots.append(["diHiggsCandidateCorrPt", "diHiggsCandidateCorr.Pt()", "p_T(jj#gamma#gamma) [GeV] regressed", nbin, 15, 800])
+plots.append(["leadingJetCorrPt", "leadingJetCorr.Pt()","Leading Jet p_T regressed",nbin,15,200]) 
+plots.append(["subleadingJetCorrPt", "subleadingJetCorr.Pt()","SubLeading Jet p_T regressed",nbin,15,200]) 
+plots.append(["leadingJet_bRegNNCorr", "leadingJet_bRegNNCorr","Leading Jet regression correction",nbin,0,2.]) 
+plots.append(["subleadingJet_bRegNNCorr", "subleadingJet_bRegNNCorr","SubLeading Jet regression correction",nbin,0,2.]) 
 
 
 '''
