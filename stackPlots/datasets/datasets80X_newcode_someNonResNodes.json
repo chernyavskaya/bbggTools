@@ -1,0 +1,114 @@
+{  
+   "data":[
+        {
+           "file":"output_GluGluToHHTo2B2G_node_SM_13TeV-madgraph.root",
+           "chainName":"GluGluToHHTo2B2G_node_SM_13TeV_madgraph_13TeV_DoubleHTag_0"
+        }
+      ],
+   "signal":[
+         {
+            "name":"nrSM",
+            "legend":"SM Nonresonant",
+            "color":4,
+            "style":3,
+            "weight":50000,
+            "file":"output_GluGluToHHTo2B2G_node_SM_13TeV-madgraph.root",
+            "chainName":"GluGluToHHTo2B2G_node_SM_13TeV_madgraph_13TeV_DoubleHTag_0",
+            "xsec" : 0.5,
+            "sfactor" : 1.0
+         }
+   ],
+   "background":{  
+      "node2":{  
+         "position":2,
+         "legend":"node 2",
+         "color":"#78b500",
+         "files":[  
+            {  
+               "file":"output_GluGluToHHTo2B2G_node_2_13TeV-madgraph.root",
+               "chainName":"GluGluToHHTo2B2G_node_2_13TeV_madgraph_13TeV_DoubleHTag_0",
+               "xsec":863.8,
+               "nevents":72358076,
+               "weight":72358076,
+               "sfactor":1.45
+            }
+         ]
+ 	     },
+      "node3":{  
+         "position":3,
+         "legend":"node 3",
+         "color":"#ffe74c",
+         "files":[  
+            {  
+               "file":"output_GluGluToHHTo2B2G_node_3_13TeV-madgraph.root",
+               "chainName":"GluGluToHHTo2B2G_node_3_13TeV_madgraph_13TeV_DoubleHTag_0",
+               "xsec":863.8,
+               "nevents":72358076,
+               "weight":72358076,
+               "sfactor":1.45
+            }
+         ]
+ 	     },
+      "node4":{  
+         "position":4,
+         "legend":"node 4",
+         "color":"#2B74BA",
+         "files":[  
+            {  
+               "file":"output_GluGluToHHTo2B2G_node_4_13TeV-madgraph.root",
+               "chainName":"GluGluToHHTo2B2G_node_4_13TeV_madgraph_13TeV_DoubleHTag_0",
+               "xsec":863.8,
+               "nevents":72358076,
+               "weight":72358076,
+               "sfactor":1.45
+            }
+         ]
+ 	     },
+      "node8":{  
+         "position":8,
+         "legend":"node 8",
+         "color":"#ad395f",
+         "files":[  
+            {  
+               "file":"output_GluGluToHHTo2B2G_node_8_13TeV-madgraph.root",
+               "chainName":"GluGluToHHTo2B2G_node_8_13TeV_madgraph_13TeV_DoubleHTag_0",
+               "xsec":863.8,
+               "nevents":72358076,
+               "weight":72358076,
+               "sfactor":1.45
+            }
+         ]
+ 	     },
+      "node13":{  
+         "position":13,
+         "legend":"node 13",
+         "color":"#ad395f",
+         "files":[  
+            {  
+               "file":"output_GluGluToHHTo2B2G_node_13_13TeV-madgraph.root",
+               "chainName":"GluGluToHHTo2B2G_node_13_13TeV_madgraph_13TeV_DoubleHTag_0",
+               "xsec":863.8,
+               "nevents":72358076,
+               "weight":72358076,
+               "sfactor":1.45
+            }
+         ]
+        },
+ 	  "nodebox":{  
+         "position":14,
+         "legend":"node box",
+         "color":"#172060",
+         "files":[  
+            {  
+               "file":"output_GluGluToHHTo2B2G_node_box_13TeV-madgraph.root",
+               "chainName":"GluGluToHHTo2B2G_node_box_13TeV_madgraph_13TeV_DoubleHTag_0",
+               "xsec":863.8,
+               "nevents":72358076,
+               "weight":72358076,
+               "sfactor":1.45
+            }
+         ]
+ 	     }
+   }
+}
+

@@ -1,0 +1,61 @@
+{  
+   "data":[
+        {
+           "file":"output_GluGluToHHTo2B2G_node_SM_13TeV-madgraph.root",
+           "chainName":"GluGluToHHTo2B2G_node_SM_13TeV_madgraph_13TeV_DoubleHTag_0"
+        }
+      ],
+   "signal":[
+         {
+            "name":"nrSM",
+            "legend":"SM Nonresonant",
+            "color":4,
+            "style":3,
+            "weight":50000,
+            "file":"output_GluGluToHHTo2B2G_node_SM_13TeV-madgraph.root",
+            "chainName":"GluGluToHHTo2B2G_node_SM_13TeV_madgraph_13TeV_DoubleHTag_0",
+            "xsec" : 0.5,
+            "sfactor" : 1.0
+         }
+   ],
+   "background":{  
+      "DiPhoJets":{  
+         "position":1,
+         "legend":"#gamma#gamma+Jets",
+         "color":"#4aa6db",
+         "files":[  
+            {  
+               "file":"output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root",
+               "chainName":"DiPhotonJetsBox_MGG_80toInf_13TeV_Sherpa_13TeV_DoubleHTag_0",
+               "xsec":84.0,
+               "nevents":57924220,
+               "weight":27392795.9746933,
+               "sfactor":1.45
+            }
+         ]
+      },
+      "GJets":{  
+         "position":2,
+         "legend":"j#gamma+Jets/jj+Jets",
+         "color":"#78b500",
+         "files":[  
+            {  
+               "file":"output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root",
+               "chainName":"GJet_Pt_40toInf_DoubleEMEnriched_MGG_80toInf_TuneCUETP8M1_13TeV_Pythia8_13TeV_DoubleHTag_0",
+               "xsec":863.8,
+               "nevents":72358076,
+               "weight":72358076,
+               "sfactor":3.0
+            },
+            {  
+               "file":"output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root",
+               "chainName":"GJet_Pt_20to40_DoubleEMEnriched_MGG_80toInf_TuneCUETP8M1_13TeV_Pythia8_13TeV_DoubleHTag_0",
+               "xsec":218.0,
+               "nevents":24989649,
+               "weight":24989649,
+               "sfactor":25.0
+            }
+         ]
+      }
+   }
+}
