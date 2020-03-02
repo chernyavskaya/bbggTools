@@ -5,25 +5,25 @@
 ##################################################
 ##################################################
 
-doBlind = False
-doShape = True
+doBlind = True
+doShape = False
 doJetCR = False
 
 
-useJsonWeighting=False
+useJsonWeighting=True
 
 isPhoCR = False
 addHiggs = False
 addggHttH = False
-hideData = True
+hideData = False
 addbbH = False
 dyjets = False
 
 
-doSignal = True
-addData = False   ############NEW
+doSignal = False
+addData = True   ############NEW
 
-hideStat = True
+hideStat = False
 
 #btagging working poing
 # 0.46 - loose
@@ -37,8 +37,10 @@ MCSF = 1.0
 #List of datasets to be used (cross section information defined there)
 #data_file = open("datasets/datasets80X_Moriond_onlyNRSM.json")
 #data_file = open("datasets/datasets80X_newcode_Moriond_onlyNRSM_diphoton_Gjets.json")
-#data_file = open("datasets/datasets80X_2017_nodata.json")
-data_file = open("datasets/datasets80X_newcode_Moriond_onlyNRSM_diphoton_Gjets.json")
+#data_file = open("datasets/datasets80X_2017_nodata_hhbbgg.json")
+#data_file = open("datasets/datasets80X_newcode_Moriond_onlyNRSM_diphoton_Gjets_hhbbgg.json")
+#data_file = open("datasets/datasets_signal_2016_2017.json")
+data_file = open("datasets/datasets_18_02_2020.json")
 
 #number of bins in histograms
 nbin = 30
@@ -47,21 +49,26 @@ subleadingJet_noreg_pt = "(subleadingJet_pt/subleadingJet_bRegNNCorr)"
 
 #year = "2017"
 #lumi = 41500.#pb
-year = "2016"
-lumi = 35900.#pb
+year = "2016+2017+2018"
+lumi = 136790.#pb
 #plots will be saved in dirName
 prefix = ""
-#dirSuffix = "20181213_2017"
-dirSuffix = "20181213_2016"
+dirSuffix = "18_02_2020_MCbgbjets"
+#dirSuffix = "20181213_2016_transformedMVA"
 #dirPrefix = "/afs/cern.ch/user/n/nchernya/www/HHbbgg/MVA_training/2017plots/"
-dirPrefix = "/afs/cern.ch/user/n/nchernya/www/HHbbgg/MVA_training/2016plots/"
+#dirPrefix = "/afs/cern.ch/user/n/nchernya/www/HHbbgg/MVA_training/2016plots/"
+dirPrefix = "plots"
 dirName = dirPrefix + dirSuffix
-treename="tagsDumper/trees/"
+#treename="tagsDumper/trees/"
+treename=""
 
 #Location of root files for each invidivual samples. Name of the root files is defined in datasets/datasets(76).json
 #filesDir = '/mnt/t3nfs01/data01/shome/nchernya/HHbbgg_ETH_devel/root_files/ntuples_2017data_20181023/'
 #filesDir = '/mnt/t3nfs01/data01/shome/nchernya/HHbbgg_ETH_devel/root_files/ntuples_2017_20181210/'
-filesDir = '/mnt/t3nfs01/data01/shome/nchernya/HHbbgg_ETH_devel/root_files/ntuples_2016_20181210/'
+#filesDir = '/mnt/t3nfs01/data01/shome/nchernya/HHbbgg_ETH_devel/root_files/ntuples_2016_20181210/'
+#filesDir = '/mnt/t3nfs01/data01/shome/nchernya/HHbbgg_ETH_devel/outfiles/20181210_common_2017/'
+#filesDir = '/mnt/t3nfs01/data01/shome/nchernya/HHbbgg_ETH_devel/outfiles/20181210_common_2016/'
+filesDir = '/eos/user/n/nchernya/HHbbgg_ntuples/HHbbgg_preselection_ntuples/20192401_wo_Mjj_leptonveto_flashgg/'
 higgsoLocation=filesDir
 bkgLocation=filesDir
 dataLocation=filesDir
@@ -72,8 +79,9 @@ signalLocation=filesDir
 #plots to be made
 plots = []
 
-#Masses
 plots.append(["diPho_Mass", "CMS_hgg_mass", "M(#gamma#gamma) [GeV]", 80, 100, 180])
+plots.append(["Mjj", "Mjj", "M_{jj} (GeV)", 40, 70, 190])
+plots.append(["MX", "MX", "#tilde{M}_{X} (GeV)", 40, 200, 1000])
 plots.append(["PhotonIDMVA2", "(customSubLeadingPhotonIDMVA)", "SubLeading Photon Id MVA", nbin, -1, 1])
 plots.append(["PhotonIDMVA1", "(customLeadingPhotonIDMVA)", "Leading Photon Id MVA ", nbin, -1, 1])
 plots.append(["CosTheta_gg", "absCosTheta_gg", "|Cos(#theta_{#gamma#gamma})|", nbin, 0, 1])
@@ -81,10 +89,30 @@ plots.append(["CosTheta_bb", "absCosTheta_bb", "|Cos(#theta_{bb})|", nbin, 0, 1]
 plots.append(["costhetastar_cs", "absCosThetaStar_CS", "|cos#theta*|_{CS}", nbin, 0, 1])
 plots.append(["diPhoton_pt_overM", "diphotonCandidatePtOverdiHiggsM", "p_{T}(#gamma#gamma)/M_{jj#gamma#gamma}", nbin, 0, 1] )
 plots.append(["diJet_pt_overM", "dijetCandidatePtOverdiHiggsM", "p_{T}(jj)/M_{jj#gamma#gamma}", nbin, 0, 1] )
-plots.append(["leadingJet_btag", "leadingJet_bDis", "b-tag leading jet", nbin, 0, 1])
-plots.append(["subleadingJet_btag", "subleadingJet_bDis", "b-tag subleading jet", nbin, 0, 1])
-plots.append(["leadingJet_DeepCSV", "leadingJet_DeepCSV", "Deep CSV leading jet", nbin, 0, 1])
-plots.append(["subleadingJet_DeepCSV", "subleadingJet_DeepCSV", "Deep CSV subleading jet", nbin, 0, 1])
+plots.append(["leadingJet_DeepFlavour", "leadingJet_DeepFlavour", "Deep Flavour leading jet", nbin, 0, 1])
+plots.append(["subleadingJet_DeepFlavour", "subleadingJet_DeepFlavour", "Deep Flavour subleading jet", nbin, 0, 1])
+plots.append(["sigmaMOverMDecorr", "sigmaMOverMDecorr", "#sigma_{M_{decorr}}/M", nbin, 0, 0.1])
+plots.append(["sigmaMOverM", "sigmaMOverM", "#sigma_{M}/M", nbin, 0, 0.1])
+plots.append(["PhoJetMinDr","PhoJetMinDr", "min DR(#gamma,jet)", nbin, 0, 6])
+plots.append(["leadingPhotonSigOverE", "leadingPhotonSigOverE", "Leading Photon #sigma_{E}/E", nbin, 0, 0.1])
+plots.append(["subleadingPhotonSigOverE", "subleadingPhotonSigOverE", "Subleading Photon #sigma_{E}/E", nbin, 0, 0.1])
+#bregression
+plots.append(["leadingJet_bRegNNResolution", "leadingJet_bRegNNResolution","Leading Jet #sigma_{p_{T}}/p_{T}",nbin,0,0.4]) 
+plots.append(["subleadingJet_bRegNNResolution", "subleadingJet_bRegNNResolution","SubLeading Jet #sigma_{p_{T}}/p_{T}",nbin,0,0.4]) 
+'''
+#Masses
+#plots.append(["diPho_Mass", "CMS_hgg_mass", "M(#gamma#gamma) [GeV]", 80, 100, 180])
+plots.append(["PhotonIDMVA2", "(customSubLeadingPhotonIDMVA)", "SubLeading Photon Id MVA", nbin, -1, 1])
+plots.append(["PhotonIDMVA1", "(customLeadingPhotonIDMVA)", "Leading Photon Id MVA ", nbin, -1, 1])
+#plots.append(["CosTheta_gg", "absCosTheta_gg", "|Cos(#theta_{#gamma#gamma})|", nbin, 0, 1])
+#plots.append(["CosTheta_bb", "absCosTheta_bb", "|Cos(#theta_{bb})|", nbin, 0, 1])
+#plots.append(["costhetastar_cs", "absCosThetaStar_CS", "|cos#theta*|_{CS}", nbin, 0, 1])
+plots.append(["diPhoton_pt_overM", "diphotonCandidatePtOverdiHiggsM", "p_{T}(#gamma#gamma)/M_{jj#gamma#gamma}", nbin, 0, 1] )
+plots.append(["diJet_pt_overM", "dijetCandidatePtOverdiHiggsM", "p_{T}(jj)/M_{jj#gamma#gamma}", nbin, 0, 1] )
+#plots.append(["leadingJet_btag", "leadingJet_bDis", "b-tag leading jet", nbin, 0, 1])
+#plots.append(["subleadingJet_btag", "subleadingJet_bDis", "b-tag subleading jet", nbin, 0, 1])
+plots.append(["leadingJet_DeepFlavour", "leadingJet_DeepFlavour", "Deep Flavour leading jet", nbin, 0, 1])
+plots.append(["subleadingJet_DeepFlavour", "subleadingJet_DeepFlavour", "Deep Flavour subleading jet", nbin, 0, 1])
 plots.append(["sigmaMOverMDecorr", "sigmaMOverMDecorr", "#sigma_{M_{decorr}}/M", nbin, 0, 0.1])
 plots.append(["sigmaMOverM", "sigmaMOverM", "#sigma_{M}/M", nbin, 0, 0.1])
 plots.append(["PhoJetMinDr","PhoJetMinDr", "min DR(#gamma,jet)", nbin, 0, 6])
@@ -104,16 +132,15 @@ plots.append(["subleadingJet_pt", "subleadingJet_pt", "p_{T}(j_{2}) (GeV)", nbin
 plots.append(["leadingJet_eta", "leadingJet_eta", "#eta(j_{1})", nbin, -3, 3] )
 plots.append(["subleadingJet_eta", "subleadingJet_eta", "#eta(j_{1})", nbin, -3, 3] )
 plots.append(["MX", "MX", "#tilde{M}_{X} (GeV)", 40, 200, 1000])
-plots.append(["leadingJet_noreg_pt", leadingJet_noreg_pt, "p_{T}(j_{1}) w/o regression [GeV]", nbin, 15, 195] ) # non regressed
-plots.append(["subleadingJet_noreg_pt", subleadingJet_noreg_pt, "p_{T}(j_{2}) w/o regression (GeV)", nbin, 15, 195] ) # non regressed
 plots.append(["subleadingPhoton_pt", "subleadingPhoton_pt", "p_{T}(#gamma_{2}) [GeV]", nbin, 30, 150])
 plots.append(["leadingPhoton_pt", "leadingPhoton_pt", "p_{T}(#gamma_{1}) [GeV]", nbin, 30, 150])
 plots.append(["Mgg", "CMS_hgg_mass", "{M}_{#gamma#gamma} (GeV)", 40, 100, 180])
 plots.append(["Mjj", "Mjj", "{M}_{jj} (GeV)", 40, 60, 180])
 
 
-
-'''
+plots.append(["MVAOutputTransformed","MVAOutputTransformed","MVA Output Transformed",40,0.,1.])
+plots.append(["leadingJet_noreg_pt", leadingJet_noreg_pt, "p_{T}(j_{1}) w/o regression [GeV]", nbin, 15, 195] ) # non regressed
+plots.append(["subleadingJet_noreg_pt", subleadingJet_noreg_pt, "p_{T}(j_{2}) w/o regression (GeV)", nbin, 15, 195] ) # non regressed
 plots.append(["diPho_Mass", "diphotonCandidate.M()", "M(#gamma#gamma) [GeV]", 80, 100, 180])
 plots.append(["diJet_Mass", "dijetCandidate.M()", "M(jj) [GeV]", 36, 70, 178])
 
@@ -170,6 +197,6 @@ plots.append(["diHiggsCandidateCorrPt", "diHiggsCandidateCorr.Pt()", "p_T(jj#gam
 #Cut = " isSignal && diphotonCandidate.M() > 100 && diphotonCandidate.M() < 180"
 #Cut += " && dijetCandidate.M() > 60 && dijetCandidate.M() < 180"
 #Cut = "((leadingJet_pt/leadingJet_bRegNNCorr) >20) && ((subleadingJet_pt/subleadingJet_bRegNNCorr)>20) && leadingJet_pt>20 && subleadingJet_pt> 20"
-Cut = "(1>0)"
+Cut = "(MVAOutputTransformed>0.2)"
 #Cut = "(( ((EGMLeadingPhotonIDMVA>0.27) && (TMath::Abs(leadingPhoton_eta)<1.48)) ||  ((EGMLeadingPhotonIDMVA>0.14) && (TMath::Abs(leadingPhoton_eta)>1.48 && (TMath::Abs(leadingPhoton_eta)<3.0)))) &&  (((EGMSubLeadingPhotonIDMVA>0.27) && (TMath::Abs(subleadingPhoton_eta)<1.48)) ||  ((EGMSubLeadingPhotonIDMVA>0.14) && (TMath::Abs(subleadingPhoton_eta)>1.48 && (TMath::Abs(subleadingPhoton_eta)<3.0)))) )" #2017
 #Cut = "((EGMLeadingPhotonIDMVA>0.20) && (EGMSubLeadingPhotonIDMVA>0.20))" #2016

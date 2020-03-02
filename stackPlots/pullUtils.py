@@ -506,15 +506,15 @@ def MakeLegend(HistList, DataHist, lumi, Signals, SUM, hideData, hideStat):
 	legends.append(leg3)
 
 	data_lumi = " Data (" + str(lumi) + " pb^{-1})"
+	llumi = float(lumi)/1000.
 	if lumi > 1000:
-		llumi = float(lumi)/1000.
 		data_lumi = " Data (" + str(llumi) + " fb^{-1})"
 #	leg1.AddEntry(DataHist, data_lumi, "lep")
 #	leg1.AddEntry(SUM, " Stat. Uncertainty", "lf")
 	
 	allLegs = []
 
-	allLegs.append([DataHist, "Data (" + str(lumi) + " fb^{-1})"])
+	allLegs.append([DataHist, "Data (" + str(llumi) + " fb^{-1})"])
 	allLegs.append([SUM,  "Stat. Uncertainty"])
 	allLegs += newList + Signals
 
