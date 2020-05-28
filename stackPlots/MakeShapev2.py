@@ -3,6 +3,9 @@ from ROOT import *
 import json, os
 import shutil
 from configsShapeNewCode_runII import *
+#from configsShapeNewCode_runII_VBF import *
+#from configsShapeNewCode_cat import *
+#from configsShapeNewCode_shapeOnly import *
 import resource
 
 #SetMemoryPolicy( kMemoryStrict )
@@ -99,7 +102,7 @@ for plot in plots:
         if not addggHttH and 'ggH' in background: continue
         if not addHiggs and 'VBF' in background: continue
         if not dyjets and "DYJ" in background: continue
-        if "QCD" in background: continue
+       # if "QCD" in background: continue
         print background
         thisName = plot[0]+"_hist"+"_"+background
         thisHist = modelHist.Clone(thisName)
@@ -120,15 +123,21 @@ for plot in plots:
             locName = thisName+str(i)
             locHist = thisHist.Clone(locName)
             thisWeightedCut = weightedCut
-            if "QCD" in thisTreeLoc:
-                 thisWeightedCut = TCut(weightedcut.replace("isSignal == 1", "isSignal == 0"))
+         #   if "QCD" in thisTreeLoc:
+         #        thisWeightedCut = TCut(weightedcut.replace("isSignal == 1", "isSignal == 0"))
             if 'additional_weight' in fi:
                  thisWeightedCut = TCut(weightedcut.replace("(weight)", "(weight)*(%s)"%fi["additional_weight"]))
             print thisWeightedCut
-            Trees[thisTreeLoc].Draw(plot[1]+">>"+locName, thisWeightedCut)
+       #     Trees[thisTreeLoc].Draw(plot[1]+">>"+locName, thisWeightedCut)
+            if "QCD" in background:
+               thisWeightedCut = TCut(weightedcut.replace("MVAOutputTransformed","HHbbggMVA"))
+               Trees[thisTreeLoc].Draw(plot[1].replace("MVAOutputTransformed","HHbbggMVA")+">>"+locName, thisWeightedCut)
+            else : Trees[thisTreeLoc].Draw(plot[1]+">>"+locName, thisWeightedCut)
 
             if useJsonWeighting:
+      	     print 'integral before ',locHist.Integral()
       	     locHist.Scale(MCSF*lumi*fi["xsec"]*fi["sfactor"]/fi["weight"]/flashggLumi)
+      	     print 'integral after ',locHist.Integral()
             if doShape:
     	        if not locHist.Integral() == 0:
     		        locHist.Scale(1./locHist.Integral())

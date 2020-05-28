@@ -198,11 +198,12 @@ def SaveWithPull(data, bkg, legend, pullH, pullE, fileName, varName, dirName, lu
 	bkg.GetHistogram().GetXaxis().SetTitle(varName)
 	bkg.GetHistogram().GetYaxis().SetTitleOffset(1.25)
 	GenMax = max(data.GetMaximum(), bkg.GetMaximum())*1.65
-	bkg.SetMaximum(GenMax)
+	if (hideData==False) : bkg.SetMaximum(GenMax)
+	else : bkg.SetMaximum(bkg.GetMaximum()*1.3)
 	bkg.SetTitle("")
 	bkg.SetMinimum(0.001)	
 	SUM.Draw("E2 same")
-	data.Draw('E same')
+	if (hideData==False) : data.Draw('E same')
 	tlatex = TLatex()
 	baseSize = 25
 	tlatex.SetNDC()
